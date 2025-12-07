@@ -6,8 +6,6 @@ Rails.application.routes.draw do
   namespace :api do
     resources :simulations, only: [:create]
     post "simulations/:id/start", to: "simulations#start"
-    post "simulations/:id/stop", to: "simulations#stop"
-    post "simulations/:id/reset", to: "simulations#reset"
   end
 
   resources :simulations, only: [:show]
