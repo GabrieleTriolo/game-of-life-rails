@@ -32,16 +32,14 @@ services:
       - bundle-data:/usr/local/bundle
     ports:
       - "3000:3000"            # Rails
-      - "12345:12345"          # porta debug rdbg
+      - "12345:12345"          # Debug port
     environment:
       RAILS_ENV: development
-
       DB_HOST: db
       DB_PORT: 5432
       DB_NAME: game_of_life_development
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
-
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_URL: redis://redis:6379/0
@@ -50,7 +48,6 @@ services:
       RUBY_DEBUG_OPEN: "true"
       RUBY_DEBUG_PORT: "12345"
       RUBY_DEBUG_HOST: "0.0.0.0"
-      RUBY_DEBUG_NONSTOP: "true"
 
   sidekiq:
     build: .
@@ -59,8 +56,10 @@ services:
       - db
       - redis
     volumes:
-      - .:/rails               # anche sidekiq lavora in /rails
+      - .:/rails             
       - bundle-data:/usr/local/bundle
+    ports:
+      - "12346:12346"
     environment:
       RAILS_ENV: development
       DB_HOST: db
@@ -72,8 +71,14 @@ services:
       REDIS_PORT: 6379
       REDIS_URL: redis://redis:6379/0
       REDIS_URL_CABLE: redis://redis:6379/1
-      RUBY_DEBUG_OPEN: "false"
+      
+      # Debug configuration for sidekiq
+      RUBY_DEBUG_OPEN: "true"
+      RUBY_DEBUG_PORT: "12346"  # Different port!
+      RUBY_DEBUG_HOST: "0.0.0.0"
     command: bundle exec sidekiq
+    stdin_open: true
+    tty: true
 
 volumes:
   db-data:

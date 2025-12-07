@@ -4,7 +4,7 @@ module Api
   
       def create
         file = params[:generation_file]
-        return render json: { error: "File mancante" }, status: :bad_request if file.blank?
+        return render json: { error: "Missing file" }, status: :bad_request if file.blank?
   
         content = file.read
         begin
@@ -30,6 +30,20 @@ module Api
         sim.update!(status: :running)
         SimulationRunnerJob.perform_later(sim.id, interval_ms_param)
         head :ok
+      end
+
+      def stop
+        sim = current_user.simulations.find(params[:id])
+        sim.update!(status: :finished)
+         head :ok
+      end
+
+      def index
+        @simulations = current_user.simulations.order(created_at: :desc)
+      end
+
+      def show
+        @simulation = current_user.simulations.find(params[:id])
       end
   
       private

@@ -1,0 +1,27 @@
+.grid {
+  margin-top: 1rem;
+  border-collapse: collapse;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.grid td {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #0c10e2;
+  transition: background-color 250ms ease-in-out;
+}
+
+.grid td.alive {
+  background: #111;
+}
+
+.grid td.dead {
+  background: #2ecc71;
+}
+
+/* Contenitore griglia */
+#game_area {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+}

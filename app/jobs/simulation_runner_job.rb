@@ -5,37 +5,45 @@ class SimulationRunnerJob < ApplicationJob
     sim = Simulation.find(simulation_id)
     return unless sim.running?
 
-    sleep(0.1) # Dai tempo al client di sottoscriversi
+    sleep(0.1)
 
     interval = interval_ms.to_i.clamp(50, 5000) / 1000.0
     current_grid = deep_dup_grid(sim.grid)
     current_gen = sim.generation
 
-    # Prima broadcast: stato iniziale
     broadcast(sim, html: render_grid(current_grid), generation: current_gen, grid: current_grid)
 
-    # Esegui 50 generazioni
-    50.times do
+    loop do
       next_grid = GameOfLife.next_grid(current_grid)
       current_gen += 1
 
-      # Salva lo stato nel database
       sim.update_columns(grid: next_grid, generation: current_gen, updated_at: Time.current)
 
-      # Broadcast la nuova generazione
       broadcast(sim, html: render_grid(next_grid), generation: current_gen, grid: next_grid)
+
+      if next_grid == current_grid
+        Rails.logger.info("Stable configuration achieved at gen #{current_gen}")
+        broadcast(sim, message: "Stable configuration reached! The pattern will no longer change.", message_type: "info")
+        sleep(2)
+        break
+      end
+
+      if next_grid.flatten.count('*') == 0
+        Rails.logger.info("All cells are dead at the gen #{current_gen}")
+        broadcast(sim, message: "All cells have died. Simulation complete.", message_type: "warning")
+        sleep(2)
+        break
+      end
 
       current_grid = next_grid
       sleep(interval)
 
-      # Se l'utente ha fermato la simulazione, esci
       break unless sim.reload.running?
     end
   rescue => e
     Rails.logger.error("[SimulationRunnerJob] sim=#{simulation_id} error=#{e.class}: #{e.message}")
     Rails.logger.error(e.backtrace.join("\n"))
   ensure
-    # Marca come finita e invia notifica finale
     if sim&.persisted?
       sim.update!(status: :finished) unless sim.finished?
       broadcast(sim, finished: true)

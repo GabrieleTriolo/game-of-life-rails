@@ -1,14 +1,23 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "type": "rdbg",
-        "name": "Attach Rails (Docker)",
-        "request": "attach",
-        "debugPort": "localhost:12345",
-        "localfs": true,
-        "localfsMap": "/rails:${workspaceFolder}"
-      }
-    ]
-  }
-  
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "rdbg",
+      "name": "🌐 Attach Rails Web (Docker)",
+      "request": "attach",
+      "debugPort": "localhost:12345",
+      "localfs": true,
+      "localfsMap": "/rails:${workspaceFolder}",
+      "showProtocolLog": false
+    },
+    {
+      "type": "rdbg",
+      "name": "⚙️ Attach Sidekiq Worker (Docker)",
+      "request": "attach",
+      "debugPort": "localhost:12346",
+      "localfs": true,
+      "localfsMap": "/rails:${workspaceFolder}",
+      "showProtocolLog": false
+    }
+  ]
+}

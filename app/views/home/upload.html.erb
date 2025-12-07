@@ -1,52 +1,22 @@
-<h2>Carica file generazione (.txt)</h2>
+<div class="upload-container" data-controller="upload">
+  <h2>Upload generation file (.txt)</h2>
 
-<input type="file" id="file" accept=".txt" />
-<button id="upload-btn">Upload</button>
-
-<script>
-  (function () {
-    const btn  = document.getElementById("upload-btn");
-    const file = document.getElementById("file");
-
-    btn.addEventListener("click", async () => {
-      if (!file.files[0]) {
-        alert("Seleziona un file .txt");
-        return;
-      }
-
-      btn.disabled = true;
-
-      const fd    = new FormData();
-      fd.append("generation_file", file.files[0]);
-
-      const token = document.querySelector('meta[name="csrf-token"]').content;
-
-      try {
-        const res = await fetch("/api/simulations", {
-          method: "POST",
-          headers: {
-            "X-CSRF-Token": token,
-            "Accept": "application/json"
-          },
-          body: fd
-        });
-
-        if (!res.ok) {
-          const text = await res.text();
-          console.error("Upload failed", res.status, text);
-          alert(`Errore ${res.status}: ${text}`);
-          btn.disabled = false;
-          return;
-        }
-
-        // Qui sì: è JSON garantito
-        const data = await res.json();  // { id: ... }
-        window.location = `/simulations/${data.id}`;
-      } catch (e) {
-        console.error(e);
-        alert("Errore di rete durante l'upload.");
-        btn.disabled = false;
-      }
-    });
-  })();
-</script>
+  <div class="upload-form">
+    <input 
+      type="file" 
+      id="file" 
+      accept=".txt" 
+      class="file-input"
+      data-upload-target="file"
+    />
+    
+    <button 
+      id="upload-btn" 
+      class="btn btn-primary"
+      data-upload-target="button"
+      data-action="click->upload#upload"
+    >
+      Upload
+    </button>
+  </div>
+</div>

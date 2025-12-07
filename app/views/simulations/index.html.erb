@@ -1,0 +1,41 @@
+<div class="simulations-list">
+  <h2>Your Simulations</h2>
+
+  <% if @simulations.empty? %>
+    <div class="empty-state">
+      <p>You haven't created any simulations yet.</p>
+      <%= link_to "Create your first one!", upload_path, class: "btn btn-primary" %>
+    </div>
+  <% else %>
+    <table class="simulations-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Generation</th>
+          <th>Dimensions</th>
+          <th>Status</th>
+          <th>Created At</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @simulations.each do |sim| %>
+          <tr>
+            <td><%= sim.id %></td>
+            <td><%= sim.generation %></td>
+            <td><%= sim.rows %>×<%= sim.cols %></td>
+            <td>
+              <span class="status-badge status-<%= sim.status %>">
+                <%= sim.status.capitalize %>
+              </span>
+            </td>
+            <td><%= sim.created_at.strftime("%m/%d/%Y %H:%M") %></td>
+            <td>
+              <%= link_to "View", simulation_path(sim), class: "btn btn-primary btn-sm" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>
