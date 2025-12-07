@@ -1,0 +1,117 @@
+<h2>
+  Generazione <span id="gen"><%= @simulation.generation %></span>
+</h2>
+
+<div id="game_area">
+  <%= render partial: "grid", locals: { grid: @simulation.grid } %>
+</div>
+
+<div style="margin-top: 1rem;">
+  <label for="interval">Intervallo (ms):</label>
+  <input id="interval" type="number" value="500" min="50" max="5000" step="50" />
+  <button id="start-btn">Start</button>
+</div>
+
+<script type="module">
+  import { createConsumer } from "@rails/actioncable";
+
+  const simId = <%= @simulation.id %>;
+  const userId = <%= current_user.id %>;
+  const consumer = createConsumer(`/cable?user_id=${userId}`);
+
+  // Funzione per aggiornare solo le celle cambiate (animazione fluida)
+  function patchGrid(grid) {
+    const table = document.getElementById("grid");
+    if (!table) return;
+
+    for (let r = 0; r < grid.length; r++) {
+      for (let c = 0; c < grid[r].length; c++) {
+        const wantAlive = grid[r][c] === "*";
+        const cell = table.querySelector(`td[data-r="${r}"][data-c="${c}"]`);
+        if (!cell) continue;
+        
+        const isAlive = cell.classList.contains("alive");
+        if (wantAlive !== isAlive) {
+          cell.classList.toggle("alive", wantAlive);
+          cell.classList.toggle("dead", !wantAlive);
+        }
+      }
+    }
+  }
+
+  // Sottoscrizione al canale
+  consumer.subscriptions.create(
+    { channel: "SimulationChannel", simulation_id: simId },
+    {
+      connected() {
+        console.log("✅ WebSocket connesso");
+      },
+
+      disconnected() {
+        console.warn("⚠️ WebSocket disconnesso");
+      },
+
+      received(data) {
+        console.log("📡 Dati ricevuti:", data);
+        
+        const gen = document.getElementById("gen");
+
+        // Aggiorna numero generazione
+        if (data.generation !== undefined && gen) {
+          gen.textContent = data.generation;
+        }
+
+        // Aggiorna griglia
+        if (data.grid) {
+          patchGrid(data.grid);
+        } else if (data.html) {
+          const gameArea = document.getElementById("game_area");
+          if (gameArea) gameArea.innerHTML = data.html;
+        }
+
+        // Fine simulazione
+        if (data.finished) {
+          const btn = document.getElementById("start-btn");
+          if (btn) {
+            btn.disabled = false;
+            console.log("✅ Simulazione terminata");
+          }
+        }
+      }
+    }
+  );
+
+  // Avvio simulazione
+  const startBtn = document.getElementById("start-btn");
+  const intervalInput = document.getElementById("interval");
+
+  startBtn.addEventListener("click", async () => {
+    startBtn.disabled = true;
+
+    const token = document.querySelector('meta[name="csrf-token"]').content;
+    const interval = intervalInput.value || 500;
+
+    try {
+      const res = await fetch(`/api/simulations/${simId}/start`, {
+        method: "POST",
+        headers: {
+          "X-CSRF-Token": token,
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `interval_ms=${encodeURIComponent(interval)}`
+      });
+
+      if (!res.ok) {
+        startBtn.disabled = false;
+        console.error("❌ Start fallito:", await res.text());
+        alert("Errore avvio simulazione");
+      } else {
+        console.log("🚀 Simulazione avviata");
+      }
+    } catch (e) {
+      startBtn.disabled = false;
+      console.error("❌ Errore di rete:", e);
+      alert("Errore di rete durante l'avvio");
+    }
+  });
+</script>

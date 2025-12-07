@@ -1,0 +1,9 @@
+<table class="grid" id="grid">
+  <% grid.each_with_index do |row, i| %>
+    <tr>
+      <% row.each_with_index do |cell, j| %>
+        <td data-r="<%= i %>" data-c="<%= j %>" class="<%= cell == '*' ? 'alive' : 'dead' %>"></td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>

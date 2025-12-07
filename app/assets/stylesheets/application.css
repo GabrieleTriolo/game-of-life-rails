@@ -1,0 +1,39 @@
+.grid { 
+    margin-top: 1rem; 
+    border-collapse: collapse; 
+  }
+  .grid td { 
+    width: 16px; 
+    height: 16px; 
+    border: 1px solid #0c10e2; 
+    background: #2ecc71; transition: background-color 250ms ease-in-out;
+  }
+
+  .grid td.alive { background: #111; }
+  .grid td.dead  { background: #08ad31; }
+  
+  body {
+    margin: 0;
+    min-height: 100vh;
+  
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* centro verticale */
+    align-items: center;      /* centro orizzontale */
+  
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  
+  h2 {
+    margin-bottom: 1rem;
+  }
+  
+  .new_user {
+    width: 100%;
+    max-width: 320px;
+  }
+  
+  .actions {
+    margin-top: 1rem;
+  }
+  

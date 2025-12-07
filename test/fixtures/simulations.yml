@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  generation: 1
+  rows: 1
+  cols: 1
+  grid: 
+  status: MyString
+
+two:
+  user: two
+  generation: 1
+  rows: 1
+  cols: 1
+  grid: 
+  status: MyString
