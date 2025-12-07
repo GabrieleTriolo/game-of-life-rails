@@ -6,11 +6,8 @@ rm -f tmp/pids/server.pid
 echo "Running rails db:prepare..."
 ./bin/rails db:prepare
 
-# opzionale: seed solo in dev
-if [ "$RAILS_ENV" = "development" ]; then
-  echo "Running rails db:seed..."
-  ./bin/rails db:seed
-fi
+echo "Running rails db:seed..."
+./bin/rails db:seed
 
 echo "Starting app..."
 exec "$@"

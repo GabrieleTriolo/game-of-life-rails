@@ -16,11 +16,9 @@ module Api
         grid_2d = parsed.grid_lines.map(&:chars)
         sim = current_user.simulations.create!(
           generation: parsed.generation,
-          generation_initial: parsed.generation,
           rows: parsed.rows,
           cols: parsed.cols,
           grid: grid_2d,
-          grid_initial: grid_2d,
           status: :pending
         )
   
@@ -31,25 +29,6 @@ module Api
         sim = current_user.simulations.find(params[:id])
         sim.update!(status: :running)
         SimulationRunnerJob.perform_later(sim.id, interval_ms_param)
-        head :ok
-      end
-
-      def stop
-        sim = current_user.simulations.find(params[:id])
-        sim.update!(status: :finished)
-        head :ok
-      end
-      
-      def reset
-        sim = current_user.simulations.find(params[:id])
-        
-        # Ripristina lo stato iniziale dal file originale
-        # (oppure salva l'originale in un altro campo)
-        sim.update!(
-          status: :pending,
-          generation: sim.generation_initial # se hai salvato quella originale
-        )
-        
         head :ok
       end
   
