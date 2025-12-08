@@ -148,6 +148,8 @@ GEM
     matrix (0.4.3)
     mini_mime (1.1.5)
     minitest (5.26.2)
+    mocha (2.8.2)
+      ruby2_keywords (>= 0.0.5)
     msgpack (1.8.0)
     mutex_m (0.3.0)
     net-imap (0.5.12)
@@ -229,6 +231,7 @@ GEM
       actionpack (>= 7.0)
       railties (>= 7.0)
     rexml (3.4.4)
+    ruby2_keywords (0.0.5)
     rubyzip (2.4.1)
     securerandom (0.4.1)
     selenium-webdriver (4.32.0)
@@ -289,6 +292,7 @@ DEPENDENCIES
   error_highlight (>= 0.4.0)
   importmap-rails
   jbuilder
+  mocha
   pg (~> 1.1)
   puma (>= 5.0)
   rails (~> 7.1.3)

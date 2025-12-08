@@ -243,3 +243,55 @@ docker-compose exec web rails db:migrate
 ```bash
 docker-compose exec web rails console
 ```
+
+## 🧪 Testing
+
+The project includes comprehensive unit tests for all core logic.
+
+### Run all tests:
+
+```bash
+# Ensure containers are running first
+docker-compose up -d
+
+# Run the entire test suite
+docker-compose exec web rails test
+```
+
+### Run specific test categories:
+
+```bash
+# Run service tests (GameOfLife, GolInputParser)
+docker-compose exec web rails test test/services/
+
+# Run model tests
+docker-compose exec web rails test test/models/
+
+# Run controller tests
+docker-compose exec web rails test test/controllers/
+
+# Run job tests
+docker-compose exec web rails test test/jobs/
+```
+
+### Run a single test file:
+
+```bash
+docker-compose exec web rails test test/services/game_of_life_test.rb
+```
+
+### Run a specific test by line number:
+
+```bash
+docker-compose exec web rails test test/services/game_of_life_test.rb:8
+```
+
+### Test Coverage:
+
+- **GameOfLife service**: 20 tests covering Conway's rules, patterns, and edge cases
+- **GolInputParser service**: 24 tests for file parsing and validation
+- **SimulationRunnerJob**: 10 tests for background job execution
+- **Api::SimulationsController**: 11 tests for API endpoints
+- **Simulation model**: 16 tests for validations and state management
+
+**Total: 81 tests**

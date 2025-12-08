@@ -11,3 +11,6 @@ development:
   <<: *default
   database: <%= ENV.fetch("DB_NAME", "game_of_life_development") %>
 
+test:
+  <<: *default
+  database: <%= ENV.fetch("DB_NAME", "game_of_life_test") %>

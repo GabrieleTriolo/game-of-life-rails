@@ -1,3 +1,5 @@
+require 'set'
+
 class GameOfLife
   def self.next_grid(grid)
     rows = grid.size
@@ -21,18 +23,19 @@ class GameOfLife
   private
 
   def self.count_living_neighbors(grid, y, x, rows, cols)
-    live = 0
+    neighbors = Set.new
     (-1..1).each do |dy|
       (-1..1).each do |dx|
         next if dy == 0 && dx == 0
 
-        # Wrapping: use modulelo arithmetic to wrap around edges
+        # Wrapping: use modulo arithmetic to wrap around edges
         ny = (y + dy) % rows
         nx = (x + dx) % cols
 
-        live += 1 if grid[ny][nx] == "*"
+        neighbors.add([ny, nx])
       end
     end
-    live
+
+    neighbors.count { |ny, nx| grid[ny][nx] == "*" }
   end
 end

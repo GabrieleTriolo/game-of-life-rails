@@ -2,16 +2,24 @@
 
 one:
   user: one
-  generation: 1
-  rows: 1
-  cols: 1
-  grid: 
-  status: MyString
+  generation: 0
+  rows: 3
+  cols: 3
+  grid: [[".", "*", "."], ["*", "*", "*"], [".", "*", "."]]
+  status: pending
 
 two:
+  user: one
+  generation: 5
+  rows: 5
+  cols: 5
+  grid: [[".", ".", ".", ".", "."], [".", ".", "*", ".", "."], [".", ".", "*", ".", "."], [".", ".", "*", ".", "."], [".", ".", ".", ".", "."]]
+  status: running
+
+three:
   user: two
-  generation: 1
-  rows: 1
-  cols: 1
-  grid: 
-  status: MyString
+  generation: 10
+  rows: 2
+  cols: 2
+  grid: [["*", "*"], ["*", "*"]]
+  status: finished
