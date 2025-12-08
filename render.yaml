@@ -1,4 +1,11 @@
 services:
+  # Redis Service
+  - type: redis
+    name: game-of-life-redis
+    plan: free
+    maxmemoryPolicy: allkeys-lru
+    ipAllowList: []
+
   # Web Service
   - type: web
     name: game-of-life-rails
@@ -50,6 +57,3 @@ databases:
     plan: free
     databaseName: game_of_life_production
     user: game_of_life
-
-  - name: game-of-life-redis
-    plan: free
