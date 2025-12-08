@@ -14,3 +14,8 @@ development:
 test:
   <<: *default
   database: <%= ENV.fetch("DB_NAME", "game_of_life_test") %>
+
+production:
+  <<: *default
+  database: <%= ENV.fetch("DB_NAME", "game_of_life_production") %>
+  url: <%= ENV['DATABASE_URL'] %>
